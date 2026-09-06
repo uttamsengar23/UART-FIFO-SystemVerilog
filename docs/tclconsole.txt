@@ -1,0 +1,87 @@
+run all
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=48
+[DRIVER : DATA SENT] data=48 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=48 wr_en=1 data_out=0
+comparison success: exp=48 act=48
+t=570595000 fifo_dout=01 fifo_rd_en=1 fifo_empty=0
+t=570605000 fifo_dout=xx fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=1
+[DRIVER : DATA SENT] data=1 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=1 wr_en=1 data_out=0
+comparison success: exp=1 act=1
+t=1092215000 fifo_dout=50 fifo_rd_en=1 fifo_empty=0
+t=1092225000 fifo_dout=xx fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=50
+[DRIVER : DATA SENT] data=50 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=50 wr_en=1 data_out=0
+comparison success: exp=50 act=50
+t=1613785000 fifo_dout=78 fifo_rd_en=1 fifo_empty=0
+t=1613795000 fifo_dout=xx fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=78
+[DRIVER : DATA SENT] data=78 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=78 wr_en=1 data_out=0
+comparison success: exp=78 act=78
+t=2135385000 fifo_dout=74 fifo_rd_en=1 fifo_empty=0
+t=2135395000 fifo_dout=xx fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=74
+[DRIVER : DATA SENT] data=74 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=74 wr_en=1 data_out=0
+comparison success: exp=74 act=74
+t=2656985000 fifo_dout=7e fifo_rd_en=1 fifo_empty=0
+t=2656995000 fifo_dout=xx fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=7e
+[DRIVER : DATA SENT] data=7e wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=7e wr_en=1 data_out=0
+comparison success: exp=7e act=7e
+t=3227485000 fifo_dout=06 fifo_rd_en=1 fifo_empty=0
+t=3227495000 fifo_dout=xx fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=6
+[DRIVER : DATA SENT] data=6 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=6 wr_en=1 data_out=0
+comparison success: exp=6 act=6
+t=3749085000 fifo_dout=90 fifo_rd_en=1 fifo_empty=0
+t=3749095000 fifo_dout=48 fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=90
+[DRIVER : DATA SENT] data=90 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=90 wr_en=1 data_out=0
+comparison success: exp=90 act=90
+t=4270685000 fifo_dout=cc fifo_rd_en=1 fifo_empty=0
+t=4270695000 fifo_dout=01 fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=cc
+[DRIVER : DATA SENT] data=cc wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=cc wr_en=1 data_out=0
+comparison success: exp=cc act=cc
+t=4792285000 fifo_dout=93 fifo_rd_en=1 fifo_empty=0
+t=4792295000 fifo_dout=50 fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=93
+[DRIVER : DATA SENT] data=93 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=93 wr_en=1 data_out=0
+comparison success: exp=93 act=93
+t=5313885000 fifo_dout=86 fifo_rd_en=1 fifo_empty=0
+t=5313895000 fifo_dout=78 fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=86
+[DRIVER : DATA SENT] data=86 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=86 wr_en=1 data_out=0
+comparison success: exp=86 act=86
+t=5884395000 fifo_dout=8e fifo_rd_en=1 fifo_empty=0
+t=5884405000 fifo_dout=74 fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=8e
+[DRIVER : DATA SENT] data=8e wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=8e wr_en=1 data_out=0
+comparison success: exp=8e act=8e
+t=6405985000 fifo_dout=c9 fifo_rd_en=1 fifo_empty=0
+t=6405995000 fifo_dout=7e fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=c9
+[DRIVER : DATA SENT] data=c9 wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=c9 wr_en=1 data_out=0
+comparison success: exp=c9 act=c9
+t=6927595000 fifo_dout=de fifo_rd_en=1 fifo_empty=0
+t=6927605000 fifo_dout=06 fifo_rd_en=0 fifo_empty=1
+[MONITOR : DATA CAPTURED] data=0 wr_en=0 data_out=de
+[DRIVER : DATA SENT] data=de wr_en=1 data_out=0
+[RM : EXPECTED GENERATED] data=de wr_en=1 data_out=0
+comparison success: exp=de act=de
+Total transactions checked: 14
+Functional coverage: 100.00%
+$finish called at time : 12 ms
+run: Time (s): cpu = 00:00:07 ; elapsed = 00:00:14 . Memory (MB): peak = 3348.320 ; gain = 0.000
