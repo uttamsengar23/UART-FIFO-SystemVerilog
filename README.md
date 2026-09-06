@@ -176,7 +176,7 @@ The testbench uses a lightweight, hand-rolled verification architecture
 inspired by the conceptual structure of UVM. It uses SystemVerilog
 mailboxes to communicate transactions between the verification components.
 
-![UART Loopback Verification Environment](docs/UART Loopback Verification Flowchart.png)
+![UART Loopback Verification Environment](docs/UARTLoopbackVerificationFlowchart.png)
 
 **Figure 2 — SystemVerilog verification environment.**
 
