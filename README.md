@@ -47,32 +47,29 @@ UART-FIFO-SystemVerilog/
 - `tbench.sv` + the `tb/*.sv` classes are the **full system-level, class-based, randomized, self-checking environment** that exercises the FIFO *as part of* the complete UART datapath — this is the one that actually proves the integrated design is correct.
 
 ---
-
 ## 3. RTL architecture
 
-```
-                         ┌─────────────────────────────────────────────┐
-                         │                  uart_top                    │
-                         │                                               │
- data_in[7:0] ──────────►│  ┌────────┐   fifo_dout[7:0]   ┌────────────┐ │
- wr_en ─────────────────►│  │  FIFO  │───────────────────►│ transmitter│ │──► serial_line
-                         │  │ (8x8)  │   fifo_rd_en        │   (FSM)    │ │      │
-                         │  └────────┘◄────────────────────└────────────┘ │      │
-                         │      ▲            !tx_busy && !fifo_empty      │      │
- busy ◄──────────────────│──────┴─── tx_busy                              │      │(loopback
-                         │                                                │      │ wire)
-                         │  ┌──────────────────┐                         │      │
- rdy ◄────────────────────│  │  uart_receiver   │◄────────────────────────│──────┘
- rdy_clr ─────────────────►│  │      (FSM)       │                        │
- data_out[7:0] ◄──────────│  └──────────────────┘                        │
-                         │                                               │
-                         │  ┌──────────────────────┐                    │
-                         │  │ baud_rate_generator  │──► tx_en, rx_en     │
-                         │  └──────────────────────┘                    │
-                         └─────────────────────────────────────────────┘
-```
+The top-level `uart_top` integrates the FIFO, UART transmitter, UART receiver,
+and baud-rate generator. The transmitter output is directly looped back to
+the receiver input through `serial_line`, making the design self-contained
+and suitable for simulation-based verification.
 
-Note: `serial_line` is looped straight from the transmitter's `tx` output to the receiver's `rx` input inside `uart_top`. This makes the module self-contained and loopback-testable without needing external UART hardware — exactly what makes it possible to verify with a pure simulation testbench.
+![UART FIFO RTL Architecture](docs/uart_fifo_arch.png)
+
+**Figure 1 — RTL architecture of the UART with FIFO.**
+
+The data path is:
+
+`data_in[7:0] → FIFO → UART transmitter → serial_line → UART receiver → data_out[7:0]`
+
+The baud-rate generator provides the transmit and receive timing enables,
+while `fifo_empty` and `tx_busy` control when data can be transferred from
+the FIFO to the transmitter.
+
+> **Loopback note:** `serial_line` connects the transmitter output directly
+> to the receiver input inside `uart_top`. This allows the complete
+> transmit/receive path to be verified without external UART hardware.
+
 
 ### 3.1 Baud rate generator
 
@@ -175,30 +172,36 @@ Not by staring at RTL — by tracing the actual verification failure: the scoreb
 
 ## 6. Verification environment (SystemVerilog)
 
-The testbench is a lightweight, hand-rolled version of the classic UVM structure — same conceptual layers, without pulling in the full UVM base class library, which keeps it easy to read top-to-bottom for anyone new to the methodology.
+The testbench uses a lightweight, hand-rolled verification architecture
+inspired by the conceptual structure of UVM. It uses SystemVerilog
+mailboxes to communicate transactions between the verification components.
 
-```
-generator ──mailbox──► driver ──(drives)──► DUT ──(serial loopback)──►┐
-                          │                                            │
-                          └──mailbox──► reference model ──mailbox──►scoreboard◄──mailbox── monitor
-```
+![UART Loopback Verification Environment](docs/UART_Loopback_Verification.png)
 
-| Component | Role |
-|---|---|
-| **`uart_txn`** | The transaction class — a randomized `data` byte + randomized `wr_en` (weighted 80% send / 20% idle via a `dist` constraint, to mix in idle cycles like a real system would). |
-| **`generator`** | Produces N randomized transactions and pushes them into a mailbox for the driver. |
-| **`driver`** | Pulls each transaction, drives it onto the DUT through a **clocking block** (`uart_if.DRIVER` modport) for race-free, synchronized signal timing. Waits for the full round trip (`busy` low, then `rdy` high) before moving to the next real transaction; only forwards *actually-sent* transactions to the reference model. |
-| **`uart_if`** | The interface bundling all DUT I/O, with a `clocking` block (`default input #1 output #1`) so driver writes and reads never race the DUT's own clock edge — standard testbench-timing hygiene. |
-| **`monitor`** | Passively watches `rdy` on the interface (no driving, no interaction with the DUT) and captures `data_out` the moment a real byte completes, forwarding it to the scoreboard. |
-| **`reference model`** | The "golden model" — for this protocol, the expected output is simply the byte that was sent (a loopback UART shouldn't transform the data), so it just relays what the driver actually transmitted. |
-| **`scoreboard`** | Pulls one actual result and one expected result at a time (`fork...join` on both mailboxes, keeping them paired in strict order), compares them, prints `comparison success`/`comparison FAILED`, and samples a **coverage group** bucketing the data byte into low/mid/high value ranges to confirm the random stimulus actually explored the full 0–255 space. |
-| **`env`** | Instantiates and connects every component above, and owns the top-level `run()` task that kicks the whole thing off and calls `sb.report()` at the end. |
+**Figure 2 — SystemVerilog verification environment.**
 
-### Why the timing matters as much as the code
-Because this UART runs at a "real" ~19,200 baud against a 100 MHz clock, **one full transaction (byte in → transmitted → received → byte out) takes roughly 520 µs of simulated time.** For 20 generated transactions this comfortably needs **well over 10 ms of total simulation runtime** — a detail that's easy to get bitten by if you leave a simulator's default runtime (often just 1 µs–1 ms) unchanged, since it'll look like "nothing happened" when really the design just hasn't had enough simulated time to get anywhere yet.
+The verification flow is:
 
+`Generator → Driver → DUT → Monitor → Scoreboard`
+
+The reference model independently generates the expected transaction and
+provides it to the scoreboard for comparison.
+
+The DUT's transmitter output is connected back to its receiver through the
+serial loopback path, allowing the transmitted data to be captured and
+checked automatically.
+
+### Verification components
+
+- **Generator** — creates stimulus transactions.
+- **Driver** — receives transactions through a mailbox and drives the DUT.
+- **Reference Model** — independently produces expected results.
+- **Monitor** — observes the DUT output and converts it into transactions.
+- **Scoreboard** — compares expected and actual transactions.
+- **Mailboxes** — provide transaction-level communication between components.
 ---
 
+  
 ## 7. Results
 
 A full run of 20 randomized transactions (≈14 real sends after the 80/20 `wr_en` split, 6 idle cycles) against the fixed RTL produces:
