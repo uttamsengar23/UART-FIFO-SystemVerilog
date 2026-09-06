@@ -54,7 +54,7 @@ and baud-rate generator. The transmitter output is directly looped back to
 the receiver input through `serial_line`, making the design self-contained
 and suitable for simulation-based verification.
 
-![UART FIFO RTL Architecture](docs/uart_fifo_arch.png)
+![UART FIFO RTL Architecture](docs/uart+fifo_archi.png)
 
 **Figure 1 — RTL architecture of the UART with FIFO.**
 
